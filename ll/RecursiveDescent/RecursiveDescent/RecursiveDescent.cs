@@ -165,6 +165,7 @@ namespace RecursiveDescent
             CheckNextLexem( "PROG" );
             CheckNextLexem( "ID" );
             CheckVar();
+            CheckNextLexem(";");
             CheckNextLexem( "BEGIN" );
             CheckListSt();
             if ( !GetCurrentLexem().Equals( "END" ) )
