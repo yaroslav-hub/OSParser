@@ -39,13 +39,18 @@ namespace RecursiveDescent
             return _currentLexem.ToUpper();
         }
 
-        private void CheckNextLexem( string waitingLexem )
+        private void CheckCurrentLexem( string waitingLexem )
         {
-            MoveLexem();
             if ( GetCurrentLexem() != waitingLexem )
             {
                 throw new ApplicationException( $"'{waitingLexem}' does not exists in" );
             }
+        }
+
+        private void CheckNextLexem( string waitingLexem )
+        {
+            MoveLexem();
+            CheckCurrentLexem( waitingLexem );
         }
 
         private void CheckIdList()
@@ -87,14 +92,14 @@ namespace RecursiveDescent
 
         private void CheckListSt()
         {
-            RecursCheckListSt();
+            bool isFasedStatmentList = false;
+            RecursCheckListSt( ref isFasedStatmentList );
         }
 
-        private void RecursCheckListSt()// съедает end -> getCurrentLExem() хранит end
+        private void RecursCheckListSt( ref bool isFasedStatmentList )// съедает end -> getCurrentLExem() хранит end
         {
-            bool isFasedStatmentList = false;
             CheckSt( ref isFasedStatmentList );
-            RecursCheckListSt();
+            RecursCheckListSt( ref isFasedStatmentList );
             if ( !isFasedStatmentList )
             {
                 throw new ApplicationException( "statement list Error: waited statement list" );
@@ -165,7 +170,7 @@ namespace RecursiveDescent
             CheckNextLexem( "PROG" );
             CheckNextLexem( "ID" );
             CheckVar();
-            CheckNextLexem(";");
+            CheckNextLexem( ";" );
             CheckNextLexem( "BEGIN" );
             CheckListSt();
             if ( !GetCurrentLexem().Equals( "END" ) )
@@ -210,7 +215,7 @@ namespace RecursiveDescent
                     break;
                 case "(":
                     CheckExp();
-                    CheckNextLexem( ")" );
+                    CheckCurrentLexem( ")" );
                     break;
                 default:
                     throw new ApplicationException( "Incorrect F value" );
@@ -250,11 +255,10 @@ namespace RecursiveDescent
 
         private void CheckAssign()
         {
-            CheckNextLexem( "ID" );
             CheckNextLexem( ":" );
             CheckNextLexem( "=" );
             CheckExp();
-            CheckNextLexem( ";" );
+            CheckCurrentLexem( ";" );
         }
     }
 }
