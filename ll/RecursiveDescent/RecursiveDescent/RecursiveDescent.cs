@@ -78,7 +78,10 @@ namespace RecursiveDescent
             CheckVar();
             CheckNextLexem("begin");
             CheckListSt();
-            CheckNextLexem("end");
+            if (!GetCurrentLexem().Equals("end"))
+            {
+                throw new ApplicationException("end expected");
+            }
             bool end = false;
             try
             {
