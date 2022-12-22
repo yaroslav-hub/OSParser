@@ -73,7 +73,7 @@ namespace RecursiveDescent
             }
         }
 
-        void RecursLISTST()
+        void RecursLISTST()// съедает end -> getCurrentLExem() хранит end
         {
             try
             {
@@ -105,7 +105,7 @@ namespace RecursiveDescent
                     case "end":
                         break;
                     default:
-                        throw new ApplicationException("ST Error: waited READ/WRITE/Assign(id :=)");
+                        throw new ApplicationException("ST Error: waited READ/WRITE/Assign(id := ...)");
                 }
             }
             catch (ApplicationException e)
