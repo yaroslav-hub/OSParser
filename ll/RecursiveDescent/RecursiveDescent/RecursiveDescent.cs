@@ -56,14 +56,14 @@ namespace RecursiveDescent
         private void CheckIdList()
         {
             MoveLexem();
-            bool resultFlag = RecursCheckIdList( GetCurrentLexem() );
+            bool resultFlag = RecoursiveCheckIdList( GetCurrentLexem() );
             if ( !resultFlag )
             {
                 throw new ApplicationException( "id list Error: waited id list" );
             }
         }
 
-        private bool RecursCheckIdList( string str )
+        private bool RecoursiveCheckIdList( string str )
         {
             bool resultFlag = false;
 
@@ -71,7 +71,7 @@ namespace RecursiveDescent
             {
                 case "ID,":
                     MoveLexem();
-                    resultFlag = RecursCheckIdList( GetCurrentLexem() );
+                    resultFlag = RecoursiveCheckIdList( GetCurrentLexem() );
                     break;
                 case "ID":
                     return true;
@@ -85,51 +85,48 @@ namespace RecursiveDescent
 
         private void CheckListSt()
         {
-            bool isFasedStatmentList = false;
-            bool isEnd = false;
-            RecursCheckListSt( ref isFasedStatmentList, ref isEnd );
+            bool foundStatmentList = false;
+            bool foundEnd = false;
+            RecoursiveCheckListSt( ref foundStatmentList, ref foundEnd );
         }
 
-        private void RecursCheckListSt( ref bool isFasedStatmentList, ref bool isEnd )// съедает end -> getCurrentLExem() хранит end
+        private void RecoursiveCheckListSt( ref bool foundStatmentList, ref bool foundEnd )// съедает end -> getCurrentLExem() хранит end
         {
-            if ( !isEnd )
+            if ( !foundEnd )
             {
-                CheckSt( ref isFasedStatmentList, ref isEnd );
-                RecursCheckListSt( ref isFasedStatmentList, ref isEnd );
-                if ( !isFasedStatmentList )
+                CheckSt( ref foundStatmentList, ref foundEnd );
+                RecoursiveCheckListSt( ref foundStatmentList, ref foundEnd );
+                if ( !foundStatmentList )
                 {
                     throw new ApplicationException( "statement list Error: waited statement list" );
                 }
             }
         }
 
-        private void CheckSt( ref bool isFasedStatmentListptr, ref bool isEnd )
+        private void CheckSt( ref bool foundStatmentList, ref bool foundEnd )
         {
             MoveLexem();
             string str = GetCurrentLexem();
             switch ( str )
             {
                 case "READ":
-                    CheckReadOrWrite();
-                    isFasedStatmentListptr = true;
-                    break;
                 case "WRITE":
                     CheckReadOrWrite();
-                    isFasedStatmentListptr = true;
+                    foundStatmentList = true;
                     break;
                 case "ID":
                     CheckAssign();
-                    isFasedStatmentListptr = true;
+                    foundStatmentList = true;
                     break;
                 case "END":
-                    if ( !isFasedStatmentListptr )
+                    if ( !foundStatmentList )
                     {
                         throw new ApplicationException( "ST Error: waited READ/WRITE/Assign(id := ...)" );
                     }
-                    isEnd = true;
+                    foundEnd = true;
                     break;
                 default:
-                    if ( !isFasedStatmentListptr )
+                    if ( !foundStatmentList )
                     {
                         throw new ApplicationException( "ST Error: waited READ/WRITE/Assign(id := ...)" );
                     }
