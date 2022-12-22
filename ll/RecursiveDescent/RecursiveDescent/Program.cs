@@ -14,8 +14,8 @@ namespace RecursiveDescent
             RecursiveDescent recursiveDescent = new RecursiveDescent(code);
             try
             {
-                bool success = recursiveDescent.Check();
-                Console.WriteLine($"Parsing success: {success}");
+                recursiveDescent.Check();
+                Console.WriteLine($"Parsing successful");
             }
             catch (ApplicationException e)
             {

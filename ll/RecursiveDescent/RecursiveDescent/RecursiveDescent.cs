@@ -9,70 +9,65 @@ namespace RecursiveDescent
 {
     public class RecursiveDescent
     {
-        public bool Check()
+        public void Check()
         {
-            return ParseProg();
+            ParseProg();
         }
 
-        public bool ParseProg()
+        public void ParseProg()
         {
             if (GetLexem().Equals("PROG"))
             {
                 if (GetLexem.Equals("id"))
                 {
-                    if (ParseVar())
+                    ParseVar();                    
+                    if (GetLexem.Equals("begin"))
                     {
-                        if (GetLexem.Equals("begin"))
+                        ParseListst();
+                        if (GetLexem.Equals("end"))
                         {
-                            if (ParseListst())
+                            bool end = false;
+                            try
                             {
-                                if (GetLexem.Equals("end"))
-                                {
-                                    bool end = false;
-                                    try
-                                    {
-                                        GetLexem();
-                                    }
-                                    catch (EndOfStreamException e)
-                                    {
-                                        end = true;
-                                    }
-                                    if (!end)
-                                    {
-                                        throw new ApplicationException("Symbol after \"end\"");
-                                    }
-                                    return true;
-                                }
+                                GetLexem();
                             }
+                            catch (EndOfStreamException e)
+                            {
+                                end = true;
+                            }
+                            if (!end)
+                            {
+                                throw new ApplicationException("Symbol after \"end\"");
+                            }
+                            return;
                         }
                     }
                 }
             }
-            return false;
+            throw new ApplicationException("Error on parsing program structure");
         }
 
-        private bool ParseVar()
+        private void ParseVar()
         {
             if (GetLexem().Equals("VAR"))
             {
-                if (ParseIdlist())
+                ParseIdlist();
+                if (GetLexem().Equals(":"))
                 {
-                    if (GetLexem().Equals(":"))
-                    {
-                        if (ParseType())
-                        {
-                            return true;
-                        }
-                    }
+                    ParseType();
+                    return;
                 }
             }
-            return false;
+            throw new ApplicationException("Error on parsing VAR");
         }
 
-        private bool ParseType()
+        private void ParseType()
         {
             string lexem = GetLexem();
-            return (lexem.Equals("int") || lexem.Equals("float") || lexem.Equals("bool") || lexem.Equals("string"));
+            if (!(lexem.Equals("int") || lexem.Equals("float") || lexem.Equals("bool") || lexem.Equals("string")))
+            {
+                throw new ApplicationException("Error on parsing type");
+            }
         }
     }
 }
