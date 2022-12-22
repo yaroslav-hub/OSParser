@@ -9,11 +9,15 @@ namespace RecursiveDescent
     public class RecursiveDescent
     {
 
-        // GetLexem() -> string
+        // 
+        // moveLexem() -> string; new Lexem for CurrentLexem
+        // getCurrentLExem() -> string;
 
-
-        string GetLexem()
+        void moveLexem()
+        { }
+        string getCurrentLExem()
         { return ""; }
+
         void CheckRead()
         { }
         void CheckWrite()
@@ -25,13 +29,14 @@ namespace RecursiveDescent
         {
             try
             {
-                bool resultFlag = RecursIDLIST(GetLexem());
+                moveLexem();
+                bool resultFlag = RecursIDLIST(getCurrentLExem());
                 if(!resultFlag)
                 {
-                    throw new ArgumentException("id list Error: waited id list");
+                    throw new ApplicationException("id list Error: waited id list");
                 }
             }
-            catch (ArgumentException e)
+            catch (ApplicationException e)
             {
                 throw e;
             }
@@ -44,12 +49,12 @@ namespace RecursiveDescent
             switch (str)
             {
                 case "id,":
-                    resultFlag = RecursIDLIST(GetLexem());
+                    resultFlag = RecursIDLIST(getCurrentLExem());
                     break;
                 case "id":
                     return true;
                 default:
-                    throw new ArgumentException("id Error: waited id");
+                    throw new ApplicationException("id Error: waited id");
             }
 
             return resultFlag;
@@ -62,7 +67,7 @@ namespace RecursiveDescent
             {
                 RecursLISTST();
             }
-            catch (ArgumentException e)
+            catch (ApplicationException e)
             {
                 throw e;
             }
@@ -75,7 +80,7 @@ namespace RecursiveDescent
                 CheckST();
                 RecursLISTST();
             }
-            catch (ArgumentException e)
+            catch (ApplicationException e)
             {
                 throw e;
             }
@@ -83,7 +88,7 @@ namespace RecursiveDescent
 
         void CheckST()
         {
-            string str = GetLexem();
+            string str = getCurrentLExem();
             try
             {
                 switch (str)
@@ -97,11 +102,13 @@ namespace RecursiveDescent
                     case "id":
                         CheckAssign();
                         break;
+                    case "end":
+                        break;
                     default:
-                        throw new ArgumentException("ST Error");
+                        throw new ApplicationException("ST Error: waited READ/WRITE/Assign(id :=)");
                 }
             }
-            catch (ArgumentException e)
+            catch (ApplicationException e)
             {
                 throw e;
             }
