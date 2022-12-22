@@ -132,5 +132,66 @@ namespace RecursiveDescent
                 throw new ApplicationException( "Error on parsing type");
             }
         }
+
+        private void CheckF()
+        {
+            MoveLexem();
+            switch ( GetCurrentLexem() )
+            {
+                case "-":
+                    CheckF();
+                    break;
+                case "id":
+                case "num":
+                    break;
+                case "(":
+                    CheckExp();
+                    CheckNextLexem( ")" );
+                    break;
+                default:
+                    throw new ApplicationException( "Incorrect F value" );
+                    break;
+            }
+        }
+
+        private void CheckT()
+        {
+            CheckF();
+            CheckB();
+        }
+
+        private void CheckB()
+        {
+            MoveLexem();
+            if (GetCurrentLexem() == "*")
+            {
+                CheckF();
+                CheckB();
+            }
+        }
+
+        private void CheckExp()
+        {
+            CheckT();
+            CheckN();
+        }
+
+        private void CheckN()
+        {
+            if ( GetCurrentLexem() == "+" )
+            {
+                CheckT();
+                CheckN();
+            }
+        }
+
+        private void CheckAssign()
+        {
+            CheckNextLexem( "id" );
+            CheckNextLexem( ":" );
+            CheckNextLexem( "=" );
+            CheckExp();
+            CheckNextLexem( ";" );
+        }
     }
 }
