@@ -13,9 +13,9 @@ namespace RecursiveDescent
         // moveLexem() -> string; new Lexem for CurrentLexem
         // getCurrentLExem() -> string;
 
-        void moveLexem()
+        void MoveLexem()
         { }
-        string getCurrentLExem()
+        string GetCurrentLexem()
         { return ""; }
 
         void CheckRead()
@@ -29,8 +29,8 @@ namespace RecursiveDescent
         {
             try
             {
-                moveLexem();
-                bool resultFlag = RecursIDLIST(getCurrentLExem());
+                MoveLexem();
+                bool resultFlag = RecursIDLIST(GetCurrentLexem());
                 if(!resultFlag)
                 {
                     throw new ApplicationException("id list Error: waited id list");
@@ -49,7 +49,8 @@ namespace RecursiveDescent
             switch (str)
             {
                 case "id,":
-                    resultFlag = RecursIDLIST(getCurrentLExem());
+                    MoveLexem();
+                    resultFlag = RecursIDLIST(GetCurrentLexem());
                     break;
                 case "id":
                     return true;
@@ -88,7 +89,8 @@ namespace RecursiveDescent
 
         void CheckST()
         {
-            string str = getCurrentLExem();
+            MoveLexem();
+            string str = GetCurrentLexem();
             try
             {
                 switch (str)
