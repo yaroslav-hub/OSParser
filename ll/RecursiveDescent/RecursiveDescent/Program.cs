@@ -32,6 +32,10 @@ namespace RecursiveDescent
                 {
                     preprocessedCode += $" {symbol} ";
                 }
+                else if (symbol == ',')
+                {
+                    preprocessedCode += $"{symbol} ";
+                }
                 else
                 {
                     preprocessedCode += symbol;
