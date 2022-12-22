@@ -76,8 +76,13 @@ namespace RecursiveDescent
         {
             try
             {
-                CheckSt();
+                bool isFasedStatmentList = false;
+                CheckSt(ref isFasedStatmentList);
                 RecursCheckListSt();
+                if (!isFasedStatmentList)
+                {
+                    throw new ApplicationException("statement list Error: waited statement list");
+                }
             }
             catch (ApplicationException e)
             {
@@ -85,7 +90,7 @@ namespace RecursiveDescent
             }
         }
 
-        private void CheckSt()
+        private void CheckSt(ref bool isFasedStatmentListptr)
         {
             MoveLexem();
             string str = GetCurrentLexem();
@@ -95,17 +100,32 @@ namespace RecursiveDescent
                 {
                     case "READ":
                         CheckReadOrWrite();
+                        isFasedStatmentListptr = true;
                         break;
                     case "WRITE":
                         CheckReadOrWrite();
+                        isFasedStatmentListptr = true;
                         break;
                     case "id":
                         CheckAssign();
+                        isFasedStatmentListptr = true;
                         break;
                     case "end":
+                        if(!isFasedStatmentListptr)
+                        {
+                            throw new ApplicationException("ST Error: waited READ/WRITE/Assign(id := ...)");
+                        }
                         break;
                     default:
-                        throw new ApplicationException("ST Error: waited READ/WRITE/Assign(id := ...)");
+                        if (!isFasedStatmentListptr)
+                        {
+                            throw new ApplicationException("ST Error: waited READ/WRITE/Assign(id := ...)");
+                        }
+                        else
+                        {
+                            throw new ApplicationException("Error: Waited end");
+                        }
+                        
                 }
             }
             catch (ApplicationException e)

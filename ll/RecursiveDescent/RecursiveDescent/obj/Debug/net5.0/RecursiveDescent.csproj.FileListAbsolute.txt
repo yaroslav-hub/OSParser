@@ -1,0 +1,5 @@
+/Users/Grishw/Учеба/OC/lw5/OSParser/ll/RecursiveDescent/RecursiveDescent/obj/Debug/net5.0/RecursiveDescent.csproj.AssemblyReference.cache
+/Users/Grishw/Учеба/OC/lw5/OSParser/ll/RecursiveDescent/RecursiveDescent/obj/Debug/net5.0/RecursiveDescent.GeneratedMSBuildEditorConfig.editorconfig
+/Users/Grishw/Учеба/OC/lw5/OSParser/ll/RecursiveDescent/RecursiveDescent/obj/Debug/net5.0/RecursiveDescent.AssemblyInfoInputs.cache
+/Users/Grishw/Учеба/OC/lw5/OSParser/ll/RecursiveDescent/RecursiveDescent/obj/Debug/net5.0/RecursiveDescent.AssemblyInfo.cs
+/Users/Grishw/Учеба/OC/lw5/OSParser/ll/RecursiveDescent/RecursiveDescent/obj/Debug/net5.0/RecursiveDescent.csproj.CoreCompileInputs.cache
