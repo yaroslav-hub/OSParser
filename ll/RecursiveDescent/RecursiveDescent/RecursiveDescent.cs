@@ -51,8 +51,6 @@ namespace RecursiveDescent
         private void CheckReadOrWrite()
         {
             CheckNextLexem( "(" );
-            
-            CheckIdList();
 
             CheckIdList();
 
