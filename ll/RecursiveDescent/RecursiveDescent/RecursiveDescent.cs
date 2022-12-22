@@ -76,7 +76,7 @@ namespace RecursiveDescent
             }
         }
 
-        public bool Check()
+        public void Check()
         {
             ParseProg();
         }
@@ -93,6 +93,39 @@ namespace RecursiveDescent
                 }
             }
             throw new ApplicationException("Error on parsing VAR");
+        }
+
+        public void ParseProg()
+        {
+            if ( GetLexem().Equals( "PROG" ) )
+            {
+                if ( GetLexem().Equals( "id" ) )
+                {
+                    ParseVar();
+                    if ( GetLexem().Equals( "begin" ) )
+                    {
+                        ParseListst();
+                        if ( GetLexem().Equals( "end" ) )
+                        {
+                            bool end = false;
+                            try
+                            {
+                                GetLexem();
+                            }
+                            catch ( EndOfStreamException e )
+                            {
+                                end = true;
+                            }
+                            if ( !end )
+                            {
+                                throw new ApplicationException( "Symbol after \"end\"" );
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
+            throw new ApplicationException( "Error on parsing program structure" );
         }
 
         private void ParseType()
