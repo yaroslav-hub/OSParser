@@ -55,18 +55,11 @@ namespace RecursiveDescent
 
         private void CheckIdList()
         {
-            try
+            MoveLexem();
+            bool resultFlag = RecursCheckIdList( GetCurrentLexem() );
+            if ( !resultFlag )
             {
-                MoveLexem();
-                bool resultFlag = RecursCheckIdList( GetCurrentLexem() );
-                if ( !resultFlag )
-                {
-                    throw new ApplicationException( "id list Error: waited id list" );
-                }
-            }
-            catch ( ApplicationException e )
-            {
-                throw e;
+                throw new ApplicationException( "id list Error: waited id list" );
             }
         }
 
