@@ -16,19 +16,23 @@ namespace RecursiveDescent
         {
             _code = code;
             _currentReadIndex = 0;
-            _lexems = _code.Split( " " ).ToList();
+            _lexems = _code
+                .Split( " " )
+                .Where( s => !String.IsNullOrEmpty( s ) )
+                .ToList();
         }
 
+        public void Check()
+        {
+            CheckProg();
+        }
+
+        #region Lexem
         private void MoveLexem()
         {
             if ( _currentReadIndex == _lexems.Count )
             {
                 throw new EndOfStreamException();
-            }
-
-            while ( _lexems[ _currentReadIndex ] == "" )
-            {
-                _currentReadIndex++;
             }
 
             _currentLexem = _lexems[ _currentReadIndex++ ];
@@ -52,12 +56,46 @@ namespace RecursiveDescent
             MoveLexem();
             CheckCurrentLexem( waitingLexem );
         }
+        #endregion
+
+        #region Blocks Checking
+        private void CheckProg()
+        {
+            CheckNextLexem( "PROG" );
+            CheckNextLexem( "ID" );
+            CheckVar();
+            CheckNextLexem( ";" );
+            CheckNextLexem( "BEGIN" );
+            CheckStatementList();
+            if ( !GetCurrentLexem().Equals( "END" ) )
+            {
+                throw new ApplicationException( "'end' expected" );
+            }
+
+            try
+            {
+                MoveLexem();
+            }
+            catch ( EndOfStreamException )
+            {
+                return;
+            }
+
+            throw new ApplicationException( "Symbol after 'end'" );
+        }
+
+        private void CheckVar()
+        {
+            CheckNextLexem( "VAR" );
+            CheckIdList();
+            CheckNextLexem( ":" );
+            CheckType();
+        }
 
         private void CheckIdList()
         {
             MoveLexem();
-            bool resultFlag = RecoursiveCheckIdList( GetCurrentLexem() );
-            if ( !resultFlag )
+            if ( !RecoursiveCheckIdList( GetCurrentLexem() ) )
             {
                 throw new ApplicationException( "id list Error: waited id list" );
             }
@@ -65,45 +103,95 @@ namespace RecursiveDescent
 
         private bool RecoursiveCheckIdList( string str )
         {
-            bool resultFlag = false;
-
             switch ( str )
             {
                 case "ID,":
                     MoveLexem();
-                    resultFlag = RecoursiveCheckIdList( GetCurrentLexem() );
-                    break;
+                    return RecoursiveCheckIdList( GetCurrentLexem() );
                 case "ID":
                     return true;
                 default:
                     throw new ApplicationException( "id Error: waited id" );
             }
-
-            return resultFlag;
         }
 
 
-        private void CheckListSt()
+        private void CheckStatementList()
         {
             bool foundStatmentList = false;
             bool foundEnd = false;
-            RecoursiveCheckListSt( ref foundStatmentList, ref foundEnd );
+            RecoursiveCheckStatementList( ref foundStatmentList, ref foundEnd );
         }
 
-        private void RecoursiveCheckListSt( ref bool foundStatmentList, ref bool foundEnd )// съедает end -> getCurrentLExem() хранит end
+        // Съедает END -> getCurrentLexem() хранит END
+        private void RecoursiveCheckStatementList( ref bool foundStatmentList, ref bool foundEnd )
         {
             if ( !foundEnd )
             {
-                CheckSt( ref foundStatmentList, ref foundEnd );
-                RecoursiveCheckListSt( ref foundStatmentList, ref foundEnd );
+                CheckStatement( ref foundStatmentList, ref foundEnd );
+                RecoursiveCheckStatementList( ref foundStatmentList, ref foundEnd );
                 if ( !foundStatmentList )
                 {
                     throw new ApplicationException( "statement list Error: waited statement list" );
                 }
             }
         }
+        #endregion
 
-        private void CheckSt( ref bool foundStatmentList, ref bool foundEnd )
+        #region Operators Checking
+        private void CheckReadOrWrite()
+        {
+            CheckNextLexem( "(" );
+            CheckIdList();
+            CheckNextLexem( ")" );
+            CheckNextLexem( ";" );
+        }
+
+        private void CheckAssign()
+        {
+            CheckNextLexem( ":" );
+            CheckNextLexem( "=" );
+            CheckCommonExpression();
+            CheckCurrentLexem( ";" );
+        }
+        #endregion
+
+        #region Expression Checking
+        private void CheckCommonExpression()
+        {
+            CheckExpression();
+            CheckAddition();
+        }
+
+        private void CheckExpression()
+        {
+            CheckElement();
+            CheckMultiplication();
+        }
+
+        private void CheckMultiplication()
+        {
+            MoveLexem();
+
+            if ( GetCurrentLexem().Equals("*") )
+            {
+                CheckElement();
+                CheckMultiplication();
+            }
+        }
+
+        private void CheckAddition()
+        {
+            if ( GetCurrentLexem().Equals("+") )
+            {
+                CheckExpression();
+                CheckAddition();
+            }
+        }
+        #endregion
+
+        #region Primary Checking
+        private void CheckStatement( ref bool foundStatmentList, ref bool foundEnd )
         {
             MoveLexem();
             string str = GetCurrentLexem();
@@ -137,59 +225,10 @@ namespace RecursiveDescent
             }
         }
 
-        private void CheckReadOrWrite()
-        {
-            CheckNextLexem( "(" );
-
-            CheckIdList();
-
-            CheckNextLexem( ")" );
-            CheckNextLexem( ";" );
-        }
-
-        public void Check()
-        {
-            CheckProg();
-        }
-
-        private void CheckVar()
-        {
-            CheckNextLexem( "VAR" );
-            CheckIdList();
-            CheckNextLexem( ":" );
-            CheckType();
-        }
-
-        private void CheckProg()
-        {
-            CheckNextLexem( "PROG" );
-            CheckNextLexem( "ID" );
-            CheckVar();
-            CheckNextLexem( ";" );
-            CheckNextLexem( "BEGIN" );
-            CheckListSt();
-            if ( !GetCurrentLexem().Equals( "END" ) )
-            {
-                throw new ApplicationException( "'end' expected" );
-            }
-            bool end = false;
-            try
-            {
-                MoveLexem();
-            }
-            catch ( EndOfStreamException )
-            {
-                end = true;
-            }
-            if ( !end )
-            {
-                throw new ApplicationException( "Symbol after 'end'" );
-            }
-        }
-
         private void CheckType()
         {
             MoveLexem();
+
             string lexem = GetCurrentLexem();
             if ( !( lexem.Equals( "INT" ) || lexem.Equals( "FLOAT" ) || lexem.Equals( "BOOL" ) || lexem.Equals( "STRING" ) ) )
             {
@@ -197,63 +236,26 @@ namespace RecursiveDescent
             }
         }
 
-        private void CheckF()
+        private void CheckElement()
         {
             MoveLexem();
+
             switch ( GetCurrentLexem() )
             {
                 case "-":
-                    CheckF();
+                    CheckElement();
                     break;
                 case "ID":
                 case "NUM":
                     break;
                 case "(":
-                    CheckExp();
+                    CheckCommonExpression();
                     CheckCurrentLexem( ")" );
                     break;
                 default:
                     throw new ApplicationException( "Incorrect F value" );
             }
         }
-
-        private void CheckT()
-        {
-            CheckF();
-            CheckB();
-        }
-
-        private void CheckB()
-        {
-            MoveLexem();
-            if ( GetCurrentLexem() == "*" )
-            {
-                CheckF();
-                CheckB();
-            }
-        }
-
-        private void CheckExp()
-        {
-            CheckT();
-            CheckN();
-        }
-
-        private void CheckN()
-        {
-            if ( GetCurrentLexem() == "+" )
-            {
-                CheckT();
-                CheckN();
-            }
-        }
-
-        private void CheckAssign()
-        {
-            CheckNextLexem( ":" );
-            CheckNextLexem( "=" );
-            CheckExp();
-            CheckCurrentLexem( ";" );
-        }
+        #endregion
     }
 }
