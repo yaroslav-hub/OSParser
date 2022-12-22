@@ -10,16 +10,38 @@ namespace RecursiveDescent
             string file = Console.ReadLine();
             StreamReader fileStream = new StreamReader(file);
             string code = fileStream.ReadLine();
-            RecursiveDescent recursiveDescent = new RecursiveDescent();
+            code = PreprocessCode(code);
+            RecursiveDescent recursiveDescent = new RecursiveDescent(code);
             try
             {
-                bool success = recursiveDescent.Check(code);
-                Console.WriteLine($"Parsing success: {success}");
+                recursiveDescent.Check();
+                Console.WriteLine($"Parsing successful");
             }
             catch (ApplicationException e)
             {
                 Console.WriteLine($"Parsing error: {e}");
             }
+        }
+
+        private static string PreprocessCode(string code)
+        {
+            string preprocessedCode = string.Empty;
+            foreach (var symbol in code)
+            {
+                if (symbol == '(' || symbol == ')' || symbol == '+' || symbol == '-' || symbol == '*' || symbol == ':' || symbol == ';')
+                {
+                    preprocessedCode += $" {symbol} ";
+                }
+                else if (symbol == ',')
+                {
+                    preprocessedCode += $"{symbol} ";
+                }
+                else
+                {
+                    preprocessedCode += symbol;
+                }
+            }
+            return preprocessedCode;
         }
     }
 }
