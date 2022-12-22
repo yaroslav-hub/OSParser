@@ -10,6 +10,7 @@ namespace RecursiveDescent
         private readonly string _code;
         private int _currentReadIndex;
         private readonly List<string> _lexems;
+
         public RecursiveDescent(string code)
         {
             _code = code;
@@ -36,21 +37,14 @@ namespace RecursiveDescent
         {
             if (GetLexem() != "WRITE" || GetLexem() != "(")
             {
-                throw new Exception("'WRITE(' does not exists in");
+                throw new ApplicationException("'WRITE(' does not exists in");
             }
 
-            try
-            {
-                CheckIdList();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            CheckIdList();
 
             if (GetLexem() != ")" || GetLexem() != ";")
             {
-                throw new Exception("');' does not exists in");
+                throw new ApplicationException("');' does not exists in");
             }
         }
 
@@ -58,21 +52,14 @@ namespace RecursiveDescent
         {
             if (GetLexem() != "READ" || GetLexem() != "(")
             {
-                throw new Exception("'READ(' does not exists in");
+                throw new ApplicationException("'READ(' does not exists in");
             }
-
-            try
-            {
-                CheckIdList();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            
+            CheckIdList();
 
             if (GetLexem() != ")" || GetLexem() != ";")
             {
-                throw new Exception("');' does not exists in");
+                throw new ApplicationException("');' does not exists in");
             }
         }
 
@@ -104,7 +91,7 @@ namespace RecursiveDescent
                     ParseVar();
                     if ( GetLexem().Equals( "begin" ) )
                     {
-                        ParseListst();
+                        CheckLISTST();
                         if ( GetLexem().Equals( "end" ) )
                         {
                             bool end = false;
@@ -126,6 +113,20 @@ namespace RecursiveDescent
                 }
             }
             throw new ApplicationException( "Error on parsing program structure" );
+        }
+
+        private void ParseVar()
+        {
+            if (GetLexem().Equals("VAR"))
+            {
+                CheckIDLIST();
+                if (GetLexem().Equals(":"))
+                {
+                    ParseType();
+                    return;
+                }
+            }
+            throw new ApplicationException("Error on parsing VAR");
         }
 
         private void ParseType()
