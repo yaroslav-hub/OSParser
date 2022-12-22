@@ -14,8 +14,8 @@ namespace RecursiveDescent
             RecursiveDescent recursiveDescent = new RecursiveDescent(code);
             try
             {
-                bool success = recursiveDescent.Check();
-                Console.WriteLine($"Parsing success: {success}");
+                recursiveDescent.Check();
+                Console.WriteLine($"Parsing successful");
             }
             catch (ApplicationException e)
             {
@@ -31,6 +31,10 @@ namespace RecursiveDescent
                 if (symbol == '(' || symbol == ')' || symbol == '+' || symbol == '-' || symbol == '*' || symbol == ':' || symbol == ';')
                 {
                     preprocessedCode += $" {symbol} ";
+                }
+                else if (symbol == ',')
+                {
+                    preprocessedCode += $"{symbol} ";
                 }
                 else
                 {

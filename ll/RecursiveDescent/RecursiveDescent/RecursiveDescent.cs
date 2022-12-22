@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,25 +9,64 @@ namespace RecursiveDescent
 {
     public class RecursiveDescent
     {
-        public bool Check()
+        public void Check()
         {
-
+            ParseProg();
         }
 
-        public bool ParseProg()
+        public void ParseProg()
         {
-            string[] codeParts = code.Split(' ');
-            if (codeParts[0].Equals("PROG"))
+            if (GetLexem().Equals("PROG"))
             {
-                if (codeParts[1].Equals("id"))
+                if (GetLexem.Equals("id"))
                 {
-                    string varPart = "";
-                    int pos = 2;
-                    while (!codeParts[pos] != "begin")
+                    ParseVar();                    
+                    if (GetLexem.Equals("begin"))
                     {
-                        if (pos)
+                        ParseListst();
+                        if (GetLexem.Equals("end"))
+                        {
+                            bool end = false;
+                            try
+                            {
+                                GetLexem();
+                            }
+                            catch (EndOfStreamException e)
+                            {
+                                end = true;
+                            }
+                            if (!end)
+                            {
+                                throw new ApplicationException("Symbol after \"end\"");
+                            }
+                            return;
+                        }
                     }
                 }
+            }
+            throw new ApplicationException("Error on parsing program structure");
+        }
+
+        private void ParseVar()
+        {
+            if (GetLexem().Equals("VAR"))
+            {
+                ParseIdlist();
+                if (GetLexem().Equals(":"))
+                {
+                    ParseType();
+                    return;
+                }
+            }
+            throw new ApplicationException("Error on parsing VAR");
+        }
+
+        private void ParseType()
+        {
+            string lexem = GetLexem();
+            if (!(lexem.Equals("int") || lexem.Equals("float") || lexem.Equals("bool") || lexem.Equals("string")))
+            {
+                throw new ApplicationException("Error on parsing type");
             }
         }
     }
