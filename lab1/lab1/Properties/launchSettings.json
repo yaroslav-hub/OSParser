@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "lab1": {
-      "commandName": "Project",
-      "commandLineArgs": "mealy-to-moore input.csv output.csv"
-    }
-  }
-}
