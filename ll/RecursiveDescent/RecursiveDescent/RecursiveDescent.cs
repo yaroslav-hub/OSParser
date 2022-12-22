@@ -86,20 +86,24 @@ namespace RecursiveDescent
         private void CheckListSt()
         {
             bool isFasedStatmentList = false;
-            RecursCheckListSt( ref isFasedStatmentList );
+            bool isEnd = false;
+            RecursCheckListSt( ref isFasedStatmentList, ref isEnd );
         }
 
-        private void RecursCheckListSt( ref bool isFasedStatmentList )// съедает end -> getCurrentLExem() хранит end
+        private void RecursCheckListSt( ref bool isFasedStatmentList, ref bool isEnd )// съедает end -> getCurrentLExem() хранит end
         {
-            CheckSt( ref isFasedStatmentList );
-            RecursCheckListSt( ref isFasedStatmentList );
-            if ( !isFasedStatmentList )
+            if ( !isEnd )
             {
-                throw new ApplicationException( "statement list Error: waited statement list" );
+                CheckSt( ref isFasedStatmentList, ref isEnd );
+                RecursCheckListSt( ref isFasedStatmentList, ref isEnd );
+                if ( !isFasedStatmentList )
+                {
+                    throw new ApplicationException( "statement list Error: waited statement list" );
+                }
             }
         }
 
-        private void CheckSt( ref bool isFasedStatmentListptr )
+        private void CheckSt( ref bool isFasedStatmentListptr, ref bool isEnd )
         {
             MoveLexem();
             string str = GetCurrentLexem();
@@ -122,6 +126,7 @@ namespace RecursiveDescent
                     {
                         throw new ApplicationException( "ST Error: waited READ/WRITE/Assign(id := ...)" );
                     }
+                    isEnd = true;
                     break;
                 default:
                     if ( !isFasedStatmentListptr )
