@@ -13,17 +13,17 @@ namespace RecursiveDescent
         // moveLexem() -> string; new Lexem for CurrentLexem
         // getCurrentLExem() -> string;
 
-        void MoveLexem()
+        private void MoveLexem()
         { }
-        string GetCurrentLexem()
+        private string GetCurrentLexem()
         { return ""; }
 
-        void CheckReadOrWrite()
+        private void CheckReadOrWrite()
         { }
-        void CheckAssign()
+        private void CheckAssign()
         { }
 
-        void CheckIDLIST()
+        private void CheckIDLIST()
         {
             try
             {
@@ -40,7 +40,7 @@ namespace RecursiveDescent
             }
         }
 
-        bool RecursIDLIST(string str)
+        private bool RecursIDLIST(string str)
         {
             bool resultFlag = false;
 
@@ -60,7 +60,7 @@ namespace RecursiveDescent
         }
 
 
-        void CheckLISTST()
+        private void CheckLISTST()
         {
             try
             {
@@ -72,7 +72,7 @@ namespace RecursiveDescent
             }
         }
 
-        void RecursLISTST()// съедает end -> getCurrentLExem() хранит end
+        private void RecursLISTST()// съедает end -> getCurrentLExem() хранит end
         {
             try
             {
@@ -85,7 +85,7 @@ namespace RecursiveDescent
             }
         }
 
-        void CheckST()
+        private void CheckST()
         {
             MoveLexem();
             string str = GetCurrentLexem();
