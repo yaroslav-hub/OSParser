@@ -18,9 +18,7 @@ namespace RecursiveDescent
         string GetCurrentLexem()
         { return ""; }
 
-        void CheckRead()
-        { }
-        void CheckWrite()
+        void CheckReadOrWrite()
         { }
         void CheckAssign()
         { }
@@ -96,10 +94,10 @@ namespace RecursiveDescent
                 switch (str)
                 {
                     case "READ":
-                        CheckRead();
+                        CheckReadOrWrite();
                         break;
                     case "WRITE":
-                        CheckWrite();
+                        CheckReadOrWrite();
                         break;
                     case "id":
                         CheckAssign();
