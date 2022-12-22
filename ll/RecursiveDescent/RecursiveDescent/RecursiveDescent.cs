@@ -12,39 +12,128 @@ namespace RecursiveDescent
         private readonly List<string> _lexems;
         private string _currentLexem;
 
-        public RecursiveDescent(string code)
+        public RecursiveDescent( string code )
         {
             _code = code;
             _currentReadIndex = 0;
-            _lexems = _code.Split(" ").ToList();
+            _lexems = _code.Split( " " ).ToList();
         }
 
         private void MoveLexem()
         {
-            if (_currentReadIndex == _lexems.Count())
+            if ( _currentReadIndex == _lexems.Count )
             {
                 throw new EndOfStreamException();
             }
 
-            while (_lexems[_currentReadIndex] == "")
+            while ( _lexems[ _currentReadIndex ] == "" )
             {
                 _currentReadIndex++;
             }
 
-            _currentLexem = _lexems[_currentReadIndex++];
+            _currentLexem = _lexems[ _currentReadIndex++ ];
         }
 
         private string GetCurrentLexem()
         {
-            return _currentLexem;
+            return _currentLexem.ToUpper();
         }
 
-        private void CheckNextLexem(string waitingLexem)
+        private void CheckNextLexem( string waitingLexem )
         {
             MoveLexem();
             if ( GetCurrentLexem() != waitingLexem )
             {
                 throw new ApplicationException( $"'{waitingLexem}' does not exists in" );
+            }
+        }
+
+        private void CheckIdList()
+        {
+            try
+            {
+                MoveLexem();
+                bool resultFlag = RecursCheckIdList( GetCurrentLexem() );
+                if ( !resultFlag )
+                {
+                    throw new ApplicationException( "id list Error: waited id list" );
+                }
+            }
+            catch ( ApplicationException e )
+            {
+                throw e;
+            }
+        }
+
+        private bool RecursCheckIdList( string str )
+        {
+            bool resultFlag = false;
+
+            switch ( str )
+            {
+                case "ID,":
+                    MoveLexem();
+                    resultFlag = RecursCheckIdList( GetCurrentLexem() );
+                    break;
+                case "ID":
+                    return true;
+                default:
+                    throw new ApplicationException( "id Error: waited id" );
+            }
+
+            return resultFlag;
+        }
+
+
+        private void CheckListSt()
+        {
+            RecursCheckListSt();
+        }
+
+        private void RecursCheckListSt()// съедает end -> getCurrentLExem() хранит end
+        {
+            bool isFasedStatmentList = false;
+            CheckSt( ref isFasedStatmentList );
+            RecursCheckListSt();
+            if ( !isFasedStatmentList )
+            {
+                throw new ApplicationException( "statement list Error: waited statement list" );
+            }
+        }
+
+        private void CheckSt( ref bool isFasedStatmentListptr )
+        {
+            MoveLexem();
+            string str = GetCurrentLexem();
+            switch ( str )
+            {
+                case "READ":
+                    CheckReadOrWrite();
+                    isFasedStatmentListptr = true;
+                    break;
+                case "WRITE":
+                    CheckReadOrWrite();
+                    isFasedStatmentListptr = true;
+                    break;
+                case "ID":
+                    CheckAssign();
+                    isFasedStatmentListptr = true;
+                    break;
+                case "END":
+                    if ( !isFasedStatmentListptr )
+                    {
+                        throw new ApplicationException( "ST Error: waited READ/WRITE/Assign(id := ...)" );
+                    }
+                    break;
+                default:
+                    if ( !isFasedStatmentListptr )
+                    {
+                        throw new ApplicationException( "ST Error: waited READ/WRITE/Assign(id := ...)" );
+                    }
+                    else
+                    {
+                        throw new ApplicationException( "Error: Waited end" );
+                    }
             }
         }
 
@@ -65,35 +154,35 @@ namespace RecursiveDescent
 
         private void CheckVar()
         {
-            CheckNextLexem("VAR");
+            CheckNextLexem( "VAR" );
             CheckIdList();
-            CheckNextLexem(":");
+            CheckNextLexem( ":" );
             CheckType();
         }
 
         private void CheckProg()
         {
-            CheckNextLexem("PROG");
-            CheckNextLexem("id");
+            CheckNextLexem( "PROG" );
+            CheckNextLexem( "ID" );
             CheckVar();
-            CheckNextLexem("begin");
+            CheckNextLexem( "BEGIN" );
             CheckListSt();
-            if (!GetCurrentLexem().Equals("end"))
+            if ( !GetCurrentLexem().Equals( "END" ) )
             {
-                throw new ApplicationException("end expected");
+                throw new ApplicationException( "'end' expected" );
             }
             bool end = false;
             try
             {
                 MoveLexem();
             }
-            catch (EndOfStreamException e)
+            catch ( EndOfStreamException )
             {
                 end = true;
             }
-            if (!end)
+            if ( !end )
             {
-                throw new ApplicationException("Symbol after \"end\"");
+                throw new ApplicationException( "Symbol after 'end'" );
             }
         }
 
@@ -101,9 +190,9 @@ namespace RecursiveDescent
         {
             MoveLexem();
             string lexem = GetCurrentLexem();
-            if (!(lexem.Equals("int") || lexem.Equals("float") || lexem.Equals("bool") || lexem.Equals("string")))
+            if ( !( lexem.Equals( "INT" ) || lexem.Equals( "FLOAT" ) || lexem.Equals( "BOOL" ) || lexem.Equals( "STRING" ) ) )
             {
-                throw new ApplicationException( "Error on parsing type");
+                throw new ApplicationException( "Error on parsing type" );
             }
         }
 
@@ -115,8 +204,8 @@ namespace RecursiveDescent
                 case "-":
                     CheckF();
                     break;
-                case "id":
-                case "num":
+                case "ID":
+                case "NUM":
                     break;
                 case "(":
                     CheckExp();
@@ -124,7 +213,6 @@ namespace RecursiveDescent
                     break;
                 default:
                     throw new ApplicationException( "Incorrect F value" );
-                    break;
             }
         }
 
@@ -137,7 +225,7 @@ namespace RecursiveDescent
         private void CheckB()
         {
             MoveLexem();
-            if (GetCurrentLexem() == "*")
+            if ( GetCurrentLexem() == "*" )
             {
                 CheckF();
                 CheckB();
@@ -161,7 +249,7 @@ namespace RecursiveDescent
 
         private void CheckAssign()
         {
-            CheckNextLexem( "id" );
+            CheckNextLexem( "ID" );
             CheckNextLexem( ":" );
             CheckNextLexem( "=" );
             CheckExp();
