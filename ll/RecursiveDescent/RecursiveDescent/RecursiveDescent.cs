@@ -10,6 +10,7 @@ namespace RecursiveDescent
         private readonly string _code;
         private int _currentReadIndex;
         private readonly List<string> _lexems;
+        private string _currentLexem;
 
         public RecursiveDescent(string code)
         {
@@ -18,7 +19,7 @@ namespace RecursiveDescent
             _lexems = _code.Split(" ").ToList();
         }
 
-        private string GetLexem()
+        private void MoveLexem()
         {
             if (_currentReadIndex == _lexems.Count())
             {
@@ -30,42 +31,38 @@ namespace RecursiveDescent
                 _currentReadIndex++;
             }
 
-            return _lexems[_currentReadIndex++];
+            _currentLexem = _lexems[_currentReadIndex++];
         }
 
-        private void CheckWrite()
+        private string GetCurrentLexem()
         {
-            if (GetLexem() != "WRITE" || GetLexem() != "(")
-            {
-                throw new ApplicationException("'WRITE(' does not exists in");
-            }
+            return _currentLexem;
+        }
 
-            CheckIdList();
-
-            if (GetLexem() != ")" || GetLexem() != ";")
+        private void CheckNextLexem(string waitingLexem)
+        {
+            MoveLexem();
+            if ( GetCurrentLexem() != waitingLexem )
             {
-                throw new ApplicationException("');' does not exists in");
+                throw new ApplicationException( $"'{waitingLexem}' does not exists in" );
             }
         }
 
-        private void CheckRead()
+        private void CheckReadOrWrite()
         {
-            if (GetLexem() != "READ" || GetLexem() != "(")
-            {
-                throw new ApplicationException("'READ(' does not exists in");
-            }
+            CheckNextLexem( "(" );
             
             CheckIdList();
 
-            if (GetLexem() != ")" || GetLexem() != ";")
-            {
-                throw new ApplicationException("');' does not exists in");
-            }
+            CheckIdList();
+
+            CheckNextLexem( ")" );
+            CheckNextLexem( ";" );
         }
 
         public void Check()
         {
-            ParseProg();
+            CheckProg();
         }
 
         private void ParseVar()
@@ -79,10 +76,10 @@ namespace RecursiveDescent
                     return;
                 }
             }
-            throw new ApplicationException("Error on parsing VAR");
+            throw new ApplicationException( "Error on parsing VAR");
         }
 
-        public void ParseProg()
+        public void CheckProg()
         {
             if ( GetLexem().Equals( "PROG" ) )
             {
@@ -134,7 +131,7 @@ namespace RecursiveDescent
             string lexem = GetLexem();
             if (!(lexem.Equals("int") || lexem.Equals("float") || lexem.Equals("bool") || lexem.Equals("string")))
             {
-                throw new ApplicationException("Error on parsing type");
+                throw new ApplicationException( "Error on parsing type");
             }
         }
     }
