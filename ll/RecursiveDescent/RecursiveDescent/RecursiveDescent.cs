@@ -23,12 +23,12 @@ namespace RecursiveDescent
         private void CheckAssign()
         { }
 
-        private void CheckIDLIST()
+        private void CheckIdList()
         {
             try
             {
                 MoveLexem();
-                bool resultFlag = RecursIDLIST(GetCurrentLexem());
+                bool resultFlag = RecursCheckIdList(GetCurrentLexem());
                 if(!resultFlag)
                 {
                     throw new ApplicationException("id list Error: waited id list");
@@ -40,7 +40,7 @@ namespace RecursiveDescent
             }
         }
 
-        private bool RecursIDLIST(string str)
+        private bool RecursCheckIdList(string str)
         {
             bool resultFlag = false;
 
@@ -48,7 +48,7 @@ namespace RecursiveDescent
             {
                 case "id,":
                     MoveLexem();
-                    resultFlag = RecursIDLIST(GetCurrentLexem());
+                    resultFlag = RecursCheckIdList(GetCurrentLexem());
                     break;
                 case "id":
                     return true;
@@ -60,11 +60,11 @@ namespace RecursiveDescent
         }
 
 
-        private void CheckLISTST()
+        private void CheckListSt()
         {
             try
             {
-                RecursLISTST();
+                RecursCheckListSt();
             }
             catch (ApplicationException e)
             {
@@ -72,12 +72,12 @@ namespace RecursiveDescent
             }
         }
 
-        private void RecursLISTST()// съедает end -> getCurrentLExem() хранит end
+        private void RecursCheckListSt()// съедает end -> getCurrentLExem() хранит end
         {
             try
             {
-                CheckST();
-                RecursLISTST();
+                CheckSt();
+                RecursCheckListSt();
             }
             catch (ApplicationException e)
             {
@@ -85,7 +85,7 @@ namespace RecursiveDescent
             }
         }
 
-        private void CheckST()
+        private void CheckSt()
         {
             MoveLexem();
             string str = GetCurrentLexem();
