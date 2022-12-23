@@ -12,6 +12,24 @@ namespace RecursiveDescent
         private readonly List<string> _lexems;
         private string _currentLexem;
 
+        private const string ERROR_MASEGE_BASE_TEXT = "Parsing error: ";
+        private const string ERROR_MASEGE_END = ERROR_MASEGE_BASE_TEXT +
+            "expected 'end'\n";
+        private const string ERROR_MASEGE_TEXT_AFTER_END = ERROR_MASEGE_BASE_TEXT +
+            "unexpected symbol after 'end'\n";
+        private const string ERROR_MASEGE_ID_LIST = ERROR_MASEGE_BASE_TEXT +
+            "expected id list\n";
+        private const string ERROR_MASEGE_ID = ERROR_MASEGE_BASE_TEXT +
+            "expected 'id'\n";
+        private const string ERROR_MASEGE_ST_LIST = ERROR_MASEGE_BASE_TEXT +
+            "expected statement list\n";
+        private const string ERROR_MASEGE_ST = ERROR_MASEGE_BASE_TEXT +
+            "expected statement ('READ(...)' / 'WRITE(...)' / 'id := ...')\n";
+        private const string ERROR_MASEGE_TYPE = ERROR_MASEGE_BASE_TEXT +
+            "fased undefined type : ";
+        private const string ERROR_MASEGE_OPERATION = ERROR_MASEGE_BASE_TEXT +
+            "unexpected operation: ";
+
         public RecursiveDescent( string code )
         {
             _code = code;
@@ -47,7 +65,8 @@ namespace RecursiveDescent
         {
             if ( GetCurrentLexem() != waitingLexem )
             {
-                throw new ApplicationException( $"'{waitingLexem}' does not exists in" );
+                throw new ApplicationException(ERROR_MASEGE_BASE_TEXT +
+                    $"'{waitingLexem}' does not exists in" );
             }
         }
 
@@ -69,7 +88,7 @@ namespace RecursiveDescent
             CheckStatementList();
             if ( !GetCurrentLexem().Equals( "END" ) )
             {
-                throw new ApplicationException( "'end' expected" );
+                throw new ApplicationException( ERROR_MASEGE_END );
             }
 
             try
@@ -81,7 +100,7 @@ namespace RecursiveDescent
                 return;
             }
 
-            throw new ApplicationException( "Symbol after 'end'" );
+            throw new ApplicationException( ERROR_MASEGE_TEXT_AFTER_END );
         }
 
         private void CheckVar()
@@ -97,7 +116,7 @@ namespace RecursiveDescent
             MoveLexem();
             if ( !RecoursiveCheckIdList( GetCurrentLexem() ) )
             {
-                throw new ApplicationException( "id list Error: waited id list" );
+                throw new ApplicationException( ERROR_MASEGE_ID_LIST );
             }
         }
 
@@ -111,7 +130,7 @@ namespace RecursiveDescent
                 case "ID":
                     return true;
                 default:
-                    throw new ApplicationException( "id Error: waited id" );
+                    throw new ApplicationException( ERROR_MASEGE_ID );
             }
         }
 
@@ -132,7 +151,7 @@ namespace RecursiveDescent
                 RecoursiveCheckStatementList( ref foundStatmentList, ref foundEnd );
                 if ( !foundStatmentList )
                 {
-                    throw new ApplicationException( "statement list Error: waited statement list" );
+                    throw new ApplicationException( ERROR_MASEGE_ST_LIST );
                 }
             }
         }
@@ -209,18 +228,18 @@ namespace RecursiveDescent
                 case "END":
                     if ( !foundStatmentList )
                     {
-                        throw new ApplicationException( "ST Error: waited READ/WRITE/Assign(id := ...)" );
+                        throw new ApplicationException( ERROR_MASEGE_ST );
                     }
                     foundEnd = true;
                     break;
                 default:
                     if ( !foundStatmentList )
                     {
-                        throw new ApplicationException( "ST Error: waited READ/WRITE/Assign(id := ...)" );
+                        throw new ApplicationException( ERROR_MASEGE_ST );
                     }
                     else
                     {
-                        throw new ApplicationException( "Error: Waited end" );
+                        throw new ApplicationException( ERROR_MASEGE_END );
                     }
             }
         }
@@ -232,7 +251,7 @@ namespace RecursiveDescent
             string lexem = GetCurrentLexem();
             if ( !( lexem.Equals( "INT" ) || lexem.Equals( "FLOAT" ) || lexem.Equals( "BOOL" ) || lexem.Equals( "STRING" ) ) )
             {
-                throw new ApplicationException( "Error on parsing type" );
+                throw new ApplicationException(ERROR_MASEGE_TYPE + $"{lexem}");
             }
         }
 
@@ -253,7 +272,7 @@ namespace RecursiveDescent
                     CheckCurrentLexem( ")" );
                     break;
                 default:
-                    throw new ApplicationException( "Incorrect F value" );
+                    throw new ApplicationException(ERROR_MASEGE_OPERATION + $"{GetCurrentLexem()}" );
             }
         }
         #endregion
