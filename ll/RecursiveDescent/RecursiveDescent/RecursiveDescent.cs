@@ -12,22 +12,22 @@ namespace RecursiveDescent
         private readonly List<string> _lexems;
         private string _currentLexem;
 
-        private const string ERROR_MASEGE_BASE_TEXT = "Parsing error: ";
-        private const string ERROR_MASEGE_END = ERROR_MASEGE_BASE_TEXT +
+        private const string ERROR_MESSAGE_BASE_TEXT = "Parsing error: ";
+        private const string ERROR_MESSAGE_END = ERROR_MESSAGE_BASE_TEXT +
             "expected 'end'\n";
-        private const string ERROR_MASEGE_TEXT_AFTER_END = ERROR_MASEGE_BASE_TEXT +
+        private const string ERROR_MESSAGE_TEXT_AFTER_END = ERROR_MESSAGE_BASE_TEXT +
             "unexpected symbol after 'end'\n";
-        private const string ERROR_MASEGE_ID_LIST = ERROR_MASEGE_BASE_TEXT +
+        private const string ERROR_MESSAGE_ID_LIST = ERROR_MESSAGE_BASE_TEXT +
             "expected id list\n";
-        private const string ERROR_MASEGE_ID = ERROR_MASEGE_BASE_TEXT +
+        private const string ERROR_MESSAGE_ID = ERROR_MESSAGE_BASE_TEXT +
             "expected 'id'\n";
-        private const string ERROR_MASEGE_ST_LIST = ERROR_MASEGE_BASE_TEXT +
+        private const string ERROR_MESSAGE_ST_LIST = ERROR_MESSAGE_BASE_TEXT +
             "expected statement list\n";
-        private const string ERROR_MASEGE_ST = ERROR_MASEGE_BASE_TEXT +
+        private const string ERROR_MESSAGE_ST = ERROR_MESSAGE_BASE_TEXT +
             "expected statement ('READ(...)' / 'WRITE(...)' / 'id := ...')\n";
-        private const string ERROR_MASEGE_TYPE = ERROR_MASEGE_BASE_TEXT +
+        private const string ERROR_MESSAGE_TYPE = ERROR_MESSAGE_BASE_TEXT +
             "fased undefined type : ";
-        private const string ERROR_MASEGE_OPERATION = ERROR_MASEGE_BASE_TEXT +
+        private const string ERROR_MESSAGE_OPERATION = ERROR_MESSAGE_BASE_TEXT +
             "unexpected operation: ";
 
         public RecursiveDescent( string code )
@@ -65,8 +65,8 @@ namespace RecursiveDescent
         {
             if ( GetCurrentLexem() != waitingLexem )
             {
-                throw new ApplicationException(ERROR_MASEGE_BASE_TEXT +
-                    $"'{waitingLexem}' does not exists in" );
+                throw new ApplicationException(ERROR_MESSAGE_BASE_TEXT +
+                    $"'{waitingLexem}' does not exists" );
             }
         }
 
@@ -88,7 +88,7 @@ namespace RecursiveDescent
             CheckStatementList();
             if ( !GetCurrentLexem().Equals( "END" ) )
             {
-                throw new ApplicationException( ERROR_MASEGE_END );
+                throw new ApplicationException( ERROR_MESSAGE_END );
             }
 
             try
@@ -100,7 +100,7 @@ namespace RecursiveDescent
                 return;
             }
 
-            throw new ApplicationException( ERROR_MASEGE_TEXT_AFTER_END );
+            throw new ApplicationException( ERROR_MESSAGE_TEXT_AFTER_END );
         }
 
         private void CheckVar()
@@ -116,7 +116,7 @@ namespace RecursiveDescent
             MoveLexem();
             if ( !RecoursiveCheckIdList( GetCurrentLexem() ) )
             {
-                throw new ApplicationException( ERROR_MASEGE_ID_LIST );
+                throw new ApplicationException( ERROR_MESSAGE_ID_LIST );
             }
         }
 
@@ -130,7 +130,7 @@ namespace RecursiveDescent
                 case "ID":
                     return true;
                 default:
-                    throw new ApplicationException( ERROR_MASEGE_ID );
+                    throw new ApplicationException( ERROR_MESSAGE_ID );
             }
         }
 
@@ -147,11 +147,18 @@ namespace RecursiveDescent
         {
             if ( !foundEnd )
             {
-                CheckStatement( ref foundStatmentList, ref foundEnd );
-                RecoursiveCheckStatementList( ref foundStatmentList, ref foundEnd );
+                try
+                {
+                    CheckStatement(ref foundStatmentList, ref foundEnd);
+                    RecoursiveCheckStatementList(ref foundStatmentList, ref foundEnd);
+                }
+                catch ( EndOfStreamException e )
+                {
+                    throw new ApplicationException( ERROR_MESSAGE_END );
+                }
                 if ( !foundStatmentList )
                 {
-                    throw new ApplicationException( ERROR_MASEGE_ST_LIST );
+                    throw new ApplicationException( ERROR_MESSAGE_ST_LIST );
                 }
             }
         }
@@ -228,18 +235,18 @@ namespace RecursiveDescent
                 case "END":
                     if ( !foundStatmentList )
                     {
-                        throw new ApplicationException( ERROR_MASEGE_ST );
+                        throw new ApplicationException( ERROR_MESSAGE_ST );
                     }
                     foundEnd = true;
                     break;
                 default:
                     if ( !foundStatmentList )
                     {
-                        throw new ApplicationException( ERROR_MASEGE_ST );
+                        throw new ApplicationException( ERROR_MESSAGE_ST );
                     }
                     else
                     {
-                        throw new ApplicationException( ERROR_MASEGE_END );
+                        throw new ApplicationException( ERROR_MESSAGE_END );
                     }
             }
         }
@@ -251,7 +258,7 @@ namespace RecursiveDescent
             string lexem = GetCurrentLexem();
             if ( !( lexem.Equals( "INT" ) || lexem.Equals( "FLOAT" ) || lexem.Equals( "BOOL" ) || lexem.Equals( "STRING" ) ) )
             {
-                throw new ApplicationException(ERROR_MASEGE_TYPE + $"{lexem}");
+                throw new ApplicationException(ERROR_MESSAGE_TYPE + $"{lexem}");
             }
         }
 
@@ -272,7 +279,7 @@ namespace RecursiveDescent
                     CheckCurrentLexem( ")" );
                     break;
                 default:
-                    throw new ApplicationException(ERROR_MASEGE_OPERATION + $"{GetCurrentLexem()}" );
+                    throw new ApplicationException( ERROR_MESSAGE_OPERATION + $"{GetCurrentLexem()}" );
             }
         }
         #endregion

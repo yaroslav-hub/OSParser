@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecursiveDescent", "RecursiveDescent\RecursiveDescent.csproj", "{EECAAC41-A688-4D61-8E76-F2540EEA2AC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecursiveDescent", "RecursiveDescent\RecursiveDescent.csproj", "{EECAAC41-A688-4D61-8E76-F2540EEA2AC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LL1", "LL1\LL1.csproj", "{36D4CB74-F3F8-49C4-AC7E-6DCA39D37C62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{EECAAC41-A688-4D61-8E76-F2540EEA2AC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EECAAC41-A688-4D61-8E76-F2540EEA2AC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EECAAC41-A688-4D61-8E76-F2540EEA2AC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36D4CB74-F3F8-49C4-AC7E-6DCA39D37C62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36D4CB74-F3F8-49C4-AC7E-6DCA39D37C62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36D4CB74-F3F8-49C4-AC7E-6DCA39D37C62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36D4CB74-F3F8-49C4-AC7E-6DCA39D37C62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
