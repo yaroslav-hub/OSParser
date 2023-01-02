@@ -1,47 +1,28 @@
-﻿using System;
-
-namespace LLREcursion
+﻿namespace LL1
 {
     public class TableElem
     {
-        public TableElem(string simbol, string ptrSimbolSet, bool isShift, bool isError, bool isNeedToAddToSteck, bool isEndOfAction)
+        public string Char { get; set; } = string.Empty;
+        public string PtrCharSet { get; set; } = string.Empty;
+
+        public bool IsShift { get; set; } = false;
+        public bool IsError { get; set; } = false;
+        public bool IsNeedToAddToStack { get; set; } = false;
+        public bool IsEndOfAction { get; set; } = false;
+        public TableElem NextElem { get; set; } = null;
+
+        public TableElem(string simbol, string ptrSimbolSet, bool isShift, bool isError, bool isNeedToAddToSteck, bool isEndOfAction, TableElem next = null)
         {
-            _char = simbol;
-            _ptrCharSet = ptrSimbolSet;
+            Char = simbol;
+            PtrCharSet = ptrSimbolSet;
 
-            _isShift = isShift;
-            _isError = isError;
-            _isNeedToAddToSteck = isNeedToAddToSteck;
-            _isEndOfAction = isEndOfAction;
+            IsShift = isShift;
+            IsError = isError;
+            IsNeedToAddToStack = isNeedToAddToSteck;
+            IsEndOfAction = isEndOfAction;
+
+            NextElem = next;
         }
-
-        public TableElem(string simbol, string ptrSimbolSet, bool isShift, bool isError, bool isNeedToAddToSteck, bool isEndOfAction, TableElem next)
-        {
-            _char = simbol;
-            _ptrCharSet = ptrSimbolSet;
-
-            _isShift = isShift;
-            _isError = isError;
-            _isNeedToAddToSteck = isNeedToAddToSteck;
-            _isEndOfAction = isEndOfAction;
-
-            _nextElem = next;
-        }
-
-        public void SetNextElem(TableElem next)
-        {
-            _nextElem = next;
-        }
-
-
-        public string _char = "";
-        public string _ptrCharSet = "";
-
-        public bool _isShift = false;
-        public bool _isError = false;
-        public bool _isNeedToAddToSteck = false;
-        public bool _isEndOfAction = false;
-        public TableElem _nextElem = null;
     }
 }
 
