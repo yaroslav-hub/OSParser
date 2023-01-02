@@ -1,7 +1,9 @@
-﻿namespace LL1
+using System;
+namespace LL1
 {
     public class TableElem
     {
+
         public string Char { get; set; } = string.Empty;
         public string PtrCharSet { get; set; } = string.Empty;
 
