@@ -5,7 +5,7 @@ namespace LL1
 {
     public class Table
     {
-        private List<TableElem> parts = new List<TableElem>();
+        private List<TableElem> elements = new List<TableElem>();
 
         public Table()
         {
@@ -13,12 +13,27 @@ namespace LL1
 
         public void addToTable(TableElem elem)
         {
-            parts.Add(elem);
+            elements.Add(elem);
         }
 
-        public TableElem GetElemFromTableByIndex(int Index)
+        public TableElem GetElemtFromTableByIndex(int Index)
         {
-            return parts[Index];
+            return elements[Index];
+        }
+
+        public List<TableElem> GetElemtsFromTableByChar(string Simbol)
+        {
+            List <TableElem> result = new List<TableElem>();
+            foreach(TableElem elem in elements)
+            {
+                if(elem.Char == Simbol)
+                {
+                    result.Add(elem);
+                }
+               
+            }
+
+            return result;
         }
     }
 }
