@@ -1,4 +1,4 @@
-﻿namespace LLREcursion
+﻿namespace LL1
 {
     public class TableElem
     {
