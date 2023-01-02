@@ -11,9 +11,9 @@ namespace LL1
         public bool IsError { get; set; } = false;
         public bool IsNeedToAddToStack { get; set; } = false;
         public bool IsEndOfAction { get; set; } = false;
-        public TableElem NextElem { get; set; } = null;
+        public int NextElem { get; set; } = -1;
 
-        public TableElem(string simbol, string ptrSimbolSet, bool isShift, bool isError, bool isNeedToAddToSteck, bool isEndOfAction, TableElem next = null)
+        public TableElem(string simbol, string ptrSimbolSet, bool isShift, bool isError, bool isNeedToAddToSteck, bool isEndOfAction, int next = -1)
         {
             Char = simbol;
             PtrCharSet = ptrSimbolSet;
