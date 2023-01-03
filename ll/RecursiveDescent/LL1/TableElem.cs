@@ -13,14 +13,14 @@ namespace LL1
         public bool IsEndOfAction { get; set; } = false;
         public int NextElem { get; set; } = -1;
 
-        public TableElem(string simbol, string ptrSimbolSet, bool isShift, bool isError, bool isNeedToAddToSteck, bool isEndOfAction, int next = -1)
+        public TableElem(string symbol, string ptrSymbolSet, bool isShift, bool isError, bool isNeedToAddToStack, bool isEndOfAction, int next = -1)
         {
-            Char = simbol;
-            PtrCharSet = ptrSimbolSet;
+            Char = symbol;
+            PtrCharSet = ptrSymbolSet;
 
             IsShift = isShift;
             IsError = isError;
-            IsNeedToAddToStack = isNeedToAddToSteck;
+            IsNeedToAddToStack = isNeedToAddToStack;
             IsEndOfAction = isEndOfAction;
 
             NextElem = next;

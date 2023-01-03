@@ -53,6 +53,16 @@ namespace LL1
             Table table = new Table();
             InitializeTable(table);
             string code = fileStream.ReadLine();
+            if (code == null)
+            {
+                Console.WriteLine("File is empty");
+                return;
+            }
+            if (code.Equals(String.Empty))
+            {
+                Console.WriteLine("First line in file is empty");
+                return;
+            }
             LL1 ll1 = new LL1(code, table);
             try
             {
