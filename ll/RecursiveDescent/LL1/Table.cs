@@ -10,22 +10,22 @@ namespace LL1
         {
         }
 
-        public void addToTable(TableElem elem)
+        public void AddToTable(TableElem elem)
         {
             elements.Add(elem);
         }
 
-        public TableElem GetElemtFromTableByIndex(int Index)
+        public TableElem GetElemtFromTableByIndex(int index)
         {
-            return elements[Index];
+            return elements[index];
         }
 
-        public List<TableElem> GetElemtsFromTableByChar(string Simbol)
+        public List<TableElem> GetElementsFromTableByChar(string symbol)
         {
-            List <TableElem> result = new List<TableElem>();
-            foreach(TableElem elem in elements)
+            List<TableElem> result = new List<TableElem>();
+            foreach (TableElem elem in elements)
             {
-                if(elem.Char == Simbol)
+                if (elem.Char.Equals(symbol))
                 {
                     result.Add(elem);
                 }

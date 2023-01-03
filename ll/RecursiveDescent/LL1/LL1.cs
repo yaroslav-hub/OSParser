@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace LL1
 {
@@ -48,7 +49,7 @@ namespace LL1
                 throw new System.IO.EndOfStreamException();
             }
 
-            while(_lexems[_currentReadIndex] == " ")
+            while(_lexems[_currentReadIndex].Equals(string.Empty))
             {
                 _currentReadIndex++;
             }
@@ -63,7 +64,7 @@ namespace LL1
 
         private void CheckCurrentLexem(string waitingLexem)
         {
-            if (GetCurrentLexem() != waitingLexem)
+            if (!GetCurrentLexem().Equals(waitingLexem))
             {
                 throw new ApplicationException(ERROR_MESSAGE_BASE_TEXT +
                     $"'{waitingLexem}' does not exists");
@@ -109,7 +110,8 @@ namespace LL1
                             try
                             {
                                 MoveLexem();
-                            } catch(System.IO.EndOfStreamException ex)
+                            } 
+                            catch(EndOfStreamException e)
                             {
                                 isEndOfStream = true;
                             }
@@ -117,7 +119,8 @@ namespace LL1
 
                         _currentTableElemIndex = tableRow.NextElem != -1 ? tableRow.NextElem : addresses.Pop();
                     }
-                } else
+                } 
+                else
                 {
                     if (tableRow.IsError)
                     {
