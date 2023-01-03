@@ -1,4 +1,4 @@
-using System;
+
 namespace LL1
 {
     public class TableElem
