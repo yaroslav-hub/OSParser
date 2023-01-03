@@ -48,7 +48,7 @@ namespace LL1
                 throw new EndOfStreamException();
             }
 
-            while(_lexems[_currentReadIndex].Equals(" "))
+            while (_lexems[_currentReadIndex].Equals(" "))
             {
                 _currentReadIndex++;
             }
@@ -70,7 +70,7 @@ namespace LL1
 
             while (true)
             {
-                TableElem tableRow = _table.GetElemtFromTableByIndex(_currentTableElemIndex);
+                TableElem tableRow = _table.GetElementFromTableByIndex(_currentTableElemIndex);
 
                 bool isCurrentLexemInPtrCharSet = tableRow.PtrCharSet.IndexOf(GetCurrentLexem()) != -1;
                 bool isEmptySymbolInPtrCharSet = tableRow.PtrCharSet.IndexOf("E") != -1;
